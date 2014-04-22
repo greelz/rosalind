@@ -1,0 +1,37 @@
+'''
+Matt Greeley
+CS 300
+
+Creating a Character Table
+ctbl.py
+
+Given: An unrooted binary tree T in Newick format for at most 200 species taxa.
+
+Return: A character table having the same splits as the edge splits of T. The columns of the character table should encode the taxa ordered lexicographically; the rows of the character table may be given in any order. Also, for any given character, the particular subset of taxa to which 1s are assigned is arbitrary.
+
+Sample Dataset
+(dog,((elephant,mouse),robot),cat);
+
+Sample Output
+00110
+00111
+'''
+
+from Bio import Phylo
+from StringIO import StringIO
+
+def lookup_by_names(tree):
+    names = {}
+    for clade in tree.find_clades():
+        if clade.name:
+            if clade.name in names:
+                raise ValueError("Duplicate key: %s" % clade.name)
+            names[clade.name] = clade
+    return names
+
+with(open('input', 'r')) as f:
+    tree = Phylo.read(StringIO(f.read()), 'newick')
+
+Phylo.draw_ascii(tree)
+names = lookup_by_names(tree)
+print(names)
